@@ -1,12 +1,12 @@
 ### UContact
 
-##### Contact API
+##### My Contact API
 Kişilerin iletişim bilgilerini saklar<br>
 Kişilerin CRUD işlemleri yapılır.
 Rabbit MQ üzerinde istekleri dinler.
 Rabbit MQ üzerinde gelen istekleri yanıtlar.
 
-#### Report API
+#### My Report API
 Rapor datası saklanır.<br>
 Mevcut raporları listeler.<br>
 İstediği raporların oluşturulup oluşturulmadığına bakar.<br>
