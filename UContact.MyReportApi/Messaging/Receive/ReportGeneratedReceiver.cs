@@ -75,7 +75,12 @@ namespace UContact.MyReportApi.Messaging.Receive
         }
         private void HandleMessage(GeneratedReportModel model)
         {
-
+            _reportService.UpdateByLocation(model.Location, new Report()
+            {
+                ContactCount = model.ContactCount,
+                PhoneNumberCount = model.PhoneNumberCount,
+                Location = model.Location
+            });
         }
 
         private void OnConsumerCancelled(object sender, ConsumerEventArgs e)

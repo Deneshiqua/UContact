@@ -9,6 +9,7 @@ namespace UContact.MyReportApi.Database.Services
     {
         Task<PagedList<Report>> GetAll(int take = 0, int skip = 0);
         Task<Report> GetById(Guid id);
+        Task<Report> UpdateByLocation(string Location, Report report);
         Task<Report> Insert(Report person);
         Task<Report> Update(Report person);
         Task<bool> Delete(Guid id);

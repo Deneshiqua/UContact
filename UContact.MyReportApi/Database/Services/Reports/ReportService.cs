@@ -47,6 +47,22 @@ namespace UContact.MyReportApi.Database.Services
 
             return paged;
         }
+        public async Task<Report> UpdateByLocation(string Location,Report report)
+        {
+            if (string.IsNullOrEmpty(Location))
+                throw new ArgumentNullException(nameof(Location));
+
+            var dbReport = await _dbContext.Reports.FirstOrDefaultAsync(x => x.Location.Equals(Location) & x.Status == ReportStatus.Generating);
+
+            if (dbReport is null)
+                throw new ArgumentNullException(nameof(dbReport));
+
+            report.Id = dbReport.Id;
+            report.Status = ReportStatus.Completed;
+            report.CreatedOn = DateTime.Now;
+
+            return await Update(report);
+        }
         public async Task<Report> GetById(Guid id)
         {
             if (id == Guid.Empty)
@@ -72,6 +88,22 @@ namespace UContact.MyReportApi.Database.Services
 
         }
         public async Task<Report> Update(Report entity)
+        {
+            if (entity is null)
+                throw new ArgumentNullException(nameof(entity));
+
+            var report = await _dbContext.Reports.FirstOrDefaultAsync(x => x.Id.Equals(entity.Id));
+
+            if (report is null)
+                throw new ArgumentNullException(nameof(report));
+
+            _dbContext.Reports.Update(entity);
+            await _dbContext.SaveChangesAsync();
+
+            return entity;
+
+        }
+        public async Task<Report> UpdateReport(Report entity)
         {
             if (entity is null)
                 throw new ArgumentNullException(nameof(entity));
