@@ -1,0 +1,212 @@
+﻿@model PersonViewModel
+@{
+    ViewData["Title"] = "Home Page";
+    Layout = "";
+    var title = Model.Id != Guid.Empty ? "Edit" : "Create Person";
+
+    if (Model.Id == Guid.Empty)
+    {
+        Model.CreatedOn = DateTime.Now;
+    }
+}
+
+<div class="modal fade" id="DetailModal" tabindex="-1" role="dialog" aria-labelledby="DetailModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="DetailModalLongTitle">@title @Model.Name @Model.Surname </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="AddOrEdit" asp-action="InsertOrUpdate" asp-controller="Person" enctype="multipart/form-data">
+                <div class="modal-body modal-load">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link active" id="detail-tab" data-toggle="tab" href="#detail" role="tab" aria-controls="detail" aria-selected="true">Details</a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link" id="info-tab" data-toggle="tab" href="#info" role="tab" aria-controls="info" aria-selected="false">Infos</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content border-left border-right border-bottom p-3" id="myTabContent">
+                                <div class="tab-pane fade show active pb-2" id="detail" role="tabpanel" aria-labelledby="detail-tab">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="form-group row">
+                                                <label asp-for="Name" class="col-sm-3 col-form-label col-form-label-sm"></label>
+                                                <div class="col-sm-9">
+                                                    <input asp-for="Name" class="form-control form-control-sm" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label asp-for="Surname" class="col-sm-3 col-form-label col-form-label-sm"></label>
+                                                <div class="col-sm-9">
+                                                    <input asp-for="Surname" class="form-control form-control-sm" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label asp-for="CompanyName" class="col-sm-3 col-form-label col-form-label-sm"></label>
+                                                <div class="col-sm-9">
+                                                    <input asp-for="CompanyName" class="form-control form-control-sm" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label asp-for="CreatedOn" class="col-sm-3 col-form-label col-form-label-sm"></label>
+                                                <div class="col-sm-9">
+                                                    <input asp-for="CreatedOn" class="form-control form-control-sm" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label asp-for="Id" class="col-sm-3 col-form-label col-form-label-sm"></label>
+                                                <div class="col-sm-9">
+                                                    <input asp-for="Id" class="form-control form-control-sm" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade pb-2" id="info" role="tabpanel" aria-labelledby="info-tab">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <button type="button" class="btnAddRow btn btn-sm btn-info">Add</button>
+                                        </div>
+                                    </div>
+                                    <div class="row my-2">
+                                        <div class="col-12">
+                                            <table class="fake-table d-none" id="table-fake">
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <input type="hidden" id="Id" name="Id" value="" />
+                                                            <input type="hidden" id="PersonId" name="PersonId" value="@Model.Id" />
+                                                            <select id="InfoTypeId" name="InfoTypeId" asp-items="Model.InfoTypes" class="form-control form-control-sm"></select>
+                                                        </td>
+                                                        <td>
+                                                            <input id="Value" name="Value" class="form-control form-control-sm" />
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <table class="table table-bordered table-striped mb-0" id="table-info">
+                                                <colgroup>
+                                                    <col />
+                                                    <col />
+                                                    <col style="width:70px;" />
+                                                </colgroup>
+                                                <thead>
+                                                    <tr>
+                                                        <th>Info Type</th>
+                                                        <th>Value</th>
+                                                        <th>Remove</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @for (int i = 0; i < Model.Infos.Count; i++)
+                                                    {
+                                                        var item = Model.Infos[i];
+                                                        <tr data-order="@i">
+                                                            <td>
+                                                                <input type="hidden" asp-for="Infos[i].Id" />
+                                                                <input type="hidden" asp-for="Infos[i].PersonId" />
+                                                            </td>
+                                                            <td>
+                                                                <input type="hidden" asp-for="Infos[i].Value" />
+                                                                @item.Value
+                                                            </td>
+                                                            <td><button type="button" name="btn-remove-row" class="btn btn-sm btn-danger">Remove</button></td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <button type="button" class="btnAddRow btn btn-sm btn-danger float-right">Save</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-sm btn-danger float-right">Kaydet</button>
+                </div>
+            </form>
+            
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('#DetailModal').modal('show');
+    })
+
+    $("#AddOrEdit").submit(function (e) {
+        e.preventDefault();
+        var form = $(this);
+        var serialize = form.serialize();
+        var url = form.attr('action');
+
+        $.ajax({
+            dataType: 'json',
+            type: 'POST',
+            url: url,
+            data: serialize,
+            success: function (data) {
+                $('#DetailModal').modal('hide');
+                consooe.log(data);
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Person is ' + data,
+                    icon: 'success'
+                })
+            }
+        });
+    });
+
+    $(".btnAddRow").click(function (e) {
+        var table = $("#table-info");
+        var tbody = $("#table-info tbody");
+
+        var tableLenght = tbody.find("tr").length;
+
+        var fakeRow = $("#table-fake tbody tr").clone();
+
+        var orderNumber = 0;
+        if (tableLenght > 0) {
+            var tableLastTr = tbody.find("tr").last();
+            var order = tableLastTr.attr("data-order");
+            orderNumber = parseInt(tableLenght) + 1;
+
+            fakeRow.find("input[name='Id']").attr("id", "Infos_" + orderNumber + "__Id");
+            fakeRow.find("input[name='Id']").attr("name", "Infos[" + orderNumber + "].Id");
+
+            fakeRow.find("input[name='Value']").attr("id", "Infos_" + orderNumber + "__Value");
+            fakeRow.find("input[name='Value']").attr("name", "Infos[" + orderNumber + "].Value");
+
+            fakeRow.find("select[name='InfoTypeId']").attr("id", "Infos_" + orderNumber + "__InfoTypeId");
+            fakeRow.find("select[name='InfoTypeId']").attr("name", "Infos[" + orderNumber + "].InfoTypeId");
+
+            fakeRow.find("input[name='PersonId']").attr("id", "Infos_" + orderNumber + "__PersonId");
+            fakeRow.find("input[name='PersonId']").attr("name", "Infos[" + orderNumber + "].PersonId");
+        }
+
+        fakeRow.append('<td><button type="button" name="btn-remove-row" class="btn btn-sm btn-danger">Remove</button></td>');
+
+
+        tbody.append(tableLastTr);
+        tbody.append(fakeRow);
+
+    });
+    $(".btnRemove").click(function (e) {
+        var Id = $(this).attr("data-order");
+
+    });
+</script>
