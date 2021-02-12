@@ -31,7 +31,7 @@ UContact.MyReportApi : https://localhost:7001
 * .Net 5.0
 * EntityFramework Core 5.0
 * Swagger(OpenAPI v3 UI)
-* AutoMapper
+* Mapster
 * xUnit
 * RabbitMQ
 * PostgreSQL 12.5
